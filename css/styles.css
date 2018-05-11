@@ -259,3 +259,9 @@ Wide styles
 		border-bottom: 0;
 	}
 }
+
+#nyc_map {
+	border: 1px; 
+	border-style: solid; 
+	border-color:#000;
+}
