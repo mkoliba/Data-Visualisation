@@ -115,7 +115,9 @@ function relative_difference(out_r, in_r){
 		return 0
 	}
 	//console.log((out_r - in_r)/(d3.max([out_r, in_r])));
-	return (out_r - in_r)/(d3.max([out_r, in_r]));
+	output = (out_r - in_r)/( (Math.abs(out_r) + Math.abs(in_r)) / 2);
+	//console.log(out_r, in_r, output);
+	return output;
 }
 
 function toPaddedHexString(num, len) {
@@ -124,22 +126,27 @@ function toPaddedHexString(num, len) {
     return "0".repeat(len - str.length) + str;
 }
 
-console.log(relative_difference[7,8])
-console.log(relative_difference[7,8])
+//console.log(relative_difference[7,8])
+//console.log(relative_difference[7,8])
 
 function color_scale(x){
 	var red, blue;
 	if (x>0){
 		blue = 255;
-		red = 255 - 255*x ;
+		red = 255 - 255* (x/2) ;
 	}
 	else{
 		red = 255;
-		blue = 255 + 255 * x ;
+		blue = 255 + 255 * (x/2) ;
 	}
 	rgb = '#' + toPaddedHexString(red,2) + '00' + toPaddedHexString(blue,2);
 	return rgb;
 }
+
+var color = d3.scaleLinear()
+    .domain([-1,1])
+    .range(["#810082", "#ffa500"])
+    .interpolate(d3.interpolateCubehelix.gamma(3));
 
 function draw_points(){
 	d3.json("data/stations_rents_outin.json", function(error, rents_out_in) {
@@ -168,17 +175,17 @@ function draw_points(){
 					return d.name; });
 
 
-			update_poits();
+			//update_poits(1);
 	});
 
 
 }
 
 
-function update_poits(){
+function update_poits(index){
 	//console.log(station_data.values[0])
 
-	out_in = station_data.values[100]
+	out_in = station_data.values[index]
 	
 	point_group.selectAll("circle")
 		.data(out_in)
@@ -194,3 +201,167 @@ function update_poits(){
 		
 }
 
+//##############################################################
+
+//Time line
+
+var margin = {top: 20, right: 20, bottom: 40, left: 30};
+
+var timeline_with = 770 - margin.left - margin.right;
+var timeline_height = 300 - margin.top - margin.bottom;
+
+var timeline_svg = d3.select("#nyc_timeline")
+	.attr("width", timeline_with + margin.left + margin.right)
+	.attr("height", timeline_height + margin.top + margin.bottom);
+
+var bar_plot = timeline_svg.append("g")
+	.attr("class", "focus")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var xAxisGroup = timeline_svg.append("g").attr("transform", "translate(" + margin.left + "," + (timeline_height + margin.top) + ")");
+var yAxisGroup = timeline_svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+var xScale = d3.scaleLinear();
+var yScale = d3.scaleLinear();
+
+var formatMinutes = function(d) { 
+    var hours = Math.floor(d / 6);
+    var output = hours + 'h ';
+    
+    return output;
+};
+
+var timeline_data;
+
+d3.json("data/rents_timeline.json", function(error, rent_bar_data) {
+
+	timeline_data = rent_bar_data;
+	xScale.domain([0,timeline_data.length]).rangeRound([0, timeline_with]);
+	yScale.range([timeline_height, 0]).domain([0, d3.max(timeline_data, function (d) {
+		return d;
+		})]);
+
+	//console.log(timeline_data)
+
+	var rects = bar_plot.append("g");
+
+	//rects.attr("clip-path", "url(#clip)");
+
+	rects.selectAll("rect")
+		.data(timeline_data)
+		.enter()
+		.append("rect")
+			.attr('class', 'rectContext')
+			.attr("x", function (d,i) {
+				return xScale(i)+1;
+			})
+			.attr("y", function (d) {
+				return yScale(d);
+			})
+			.attr("width", Math.floor(timeline_with / timeline_data.length)-1)
+			.attr("height", function (d) {
+				return timeline_height - yScale(d)
+			})
+		.append("title") 
+				.text(function(d) {
+					return "Number of rents " + d.toString(); });
+
+	yAxisGroup.attr("class", "y-axis").call(d3.axisLeft(yScale))
+
+	xAxisGroup.attr("class", "x-axis")
+		.call(
+			d3.axisBottom(xScale)
+				.tickFormat(formatMinutes)
+				.tickValues(d3.range(0, timeline_data.length +1 , 6)))
+
+
+				
+
+	
+
+})
+
+var brush = d3.brushX()
+				.extent([[0, 0], [timeline_with, timeline_height]])
+				.on("start brush", brushed)
+				.on("end", brushended);
+
+var brush_group = bar_plot.append("g")
+.attr("class", "brush")
+.call(brush)
+//.call(brush.move, [, 26].map(xScale))
+.selectAll(".overlay")
+.each(function(d) { d.type = "selection"; }) // Treat overlay interaction as move.
+	.on("mousedown touchstart", brushcentered) // Recenter before brushing.
+;
+
+
+function brushcentered() {
+	var dx = xScale(1) - xScale(0), // Use a fixed width when recentering.
+	
+		cx = d3.mouse(this)[0],
+		x0 = cx - dx / 2,
+		x1 = cx + dx / 2;
+		//console.log(x0, x1, cx);
+	d3.select(this.parentNode).call(brush.move, x1 > timeline_with ? [timeline_with - dx, timeline_with] : x0 < 0 ? [0, dx] : [x0, x1]);
+  }
+function brushed() {
+	if (!d3.event.selection) return; // Ignore empty selections.
+
+	var d0 = d3.event.selection.map(xScale.invert),
+		d1 = d0.map(Math.round);
+	if (d1[0] >= d1[1]) {
+		d1[0] = Math.floor(d0[0]);
+		d1[1] = d1[0] + 1;
+		}
+	
+	update_poits(d1[0])
+	
+	//var extent = d3.event.selection.map(xScale.invert, xScale);
+	//console.log("extend", extent);
+	//dot.classed("selected", function(d) { return extent[0] <= d[0] && d[0] <= extent[1]; });
+
+  }
+  
+  function brushended() {
+	if (!d3.event.sourceEvent) return; // Only transition after input.
+	if (!d3.event.selection) return; // Ignore empty selections.
+	var d0 = d3.event.selection.map(xScale.invert),
+		d1 = d0.map(Math.round);
+	//console.log(d1)
+	// If empty when rounded, use floor & offset instead.
+	if (d1[0] >= d1[1]) {
+	  d1[0] = Math.floor(d0[0]);
+	  d1[1] = d1[0] + 1;
+	}
+  
+	d3.select(this).transition().call(brush.move, d1.map(xScale));
+
+	//update_poits(d1[0])
+}
+
+
+function start_animation(){
+	//move brush on begining
+	var position = [0,1];
+
+	//d3.select("g .brush").transition().call(brush.move, position.map(xScale));
+	console.log(timeline_data.length);
+	for(var i = 0; i <= timeline_data.length ; i++){
+		d3.select("g .brush")
+			.transition()
+			.duration(300)
+			.delay(300*i)
+			.call(brush.move, position.map(xScale));
+		
+		position = [i,i+1];
+		console.log(position);
+	}
+
+}
+
+d3.select("#start_animation")
+	.on("click", function(){
+        start_animation();
+      });
