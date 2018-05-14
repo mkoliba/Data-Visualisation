@@ -33,7 +33,7 @@
 
     <div class="header">
       <div class="container">
-        <h1 class="header-heading">New York CitiBike project</h1>
+        <h1 class="header-heading">New York Citi Bike project</h1>
       </div>
     </div>
 
@@ -46,15 +46,27 @@
       <div class="container">
         <div class="main">
           <!--Part 1 -->
-          <h2>Part 1:  </h2>
-          <p></p>
-          <div  id='color-legent'>
-            <div class="legend_left">  100% returns - end of trip</div>
-            <div class="legend_right"> 100% rents - start of trip</div>
-          </div>
-          <svg id="nyc_map"></svg>
-          <svg id="nyc_timeline"></svg>
+          <h2>Stations & ration of rents/returns </h2>
+          <p>The map bellow shows Citi Bike stations from NYC March 2018 dataset. The bar chart below map shows how many bikes were rented within the 10-minute time block on 1.3.2018. We can clearly see that people used bike most during the rush hours. 
 
+              </p>
+
+              <p>If the specific bar is selected then the colour of stations scale according to the ration of how many bikes were rented/returned from that station from beginning of the day to the selected moment.</p>
+              <p>
+              Between 8-10 hours we can see how people were renting bikes in the edges and returning them in the city centre. In the evening majority of the points get similar red colour from the middle of the scale as bikes distribute back.
+              </p>
+
+
+
+          
+          <svg id="nyc_map"></svg>
+          <div  id='color-legent'>
+              
+              <div class="legend_left">  100% returns - end of trip</div>
+              <div class="legend_right"> 100% rents - start of trip</div>
+            </div>
+          <svg id="nyc_timeline"></svg>
+          <p><Number of bikes rented in 10 minutes time block on 1.3.2018.</p></Number>
           <button type="button" id="start_animation">Start Animation</button>
           
           <script type="text/javascript" src="javascript/nyc_map.js"></script>

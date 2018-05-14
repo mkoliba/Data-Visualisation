@@ -1,5 +1,5 @@
 var mapwidth = 800,
-    mapheight = 600;
+    mapheight = 450;
     
 var projection;
 
@@ -16,7 +16,7 @@ var path;
 d3.json("data/NYC_MapInfo.geojson", function(error, NYC_MapInfo) {
 	//.log(projection.scale());
 	
-	projection.center([40.774986, -73.946488]).angle([-55]).fitExtent([[-300, 0],[mapwidth+500, mapheight+600]], NYC_MapInfo);
+	projection.center([40.774986, -73.946488]).angle([-55]).fitExtent([[-300, -80],[mapwidth+500, mapheight+600]], NYC_MapInfo);
 	
 	
 
@@ -40,7 +40,7 @@ d3.json("data/NYC_MapInfo.geojson", function(error, NYC_MapInfo) {
 			// else if (BoroName == "Manhattan") return "#006400";
 			// else if (BoroName == "Bronx") return "#ccc";
 			// else 
-				return "#6c7b8b";
+				return "#cbcbcb";
         })
         .attr("class", function(d) {
 			var BoroName = d.properties.BoroName;
@@ -151,7 +151,7 @@ function toPaddedHexString(num, len) {
 
 color = d3.scaleLinear().domain([-2,2])
       .interpolate(d3.interpolateHcl)
-      .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
+      .range([d3.rgb("rgb(177, 109, 247)"), d3.rgb('#FFF500')]);
 
 function draw_points(){
 	d3.json("data/stations_rents_outin.json", function(error, rents_out_in) {
@@ -395,7 +395,7 @@ var legend = d3.select("#color-legent");
 var    length = 50,
     color2 = d3.scaleLinear().domain([1,length])
       .interpolate(d3.interpolateHcl)
-      .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
+      .range([d3.rgb("rgb(177, 109, 247)"), d3.rgb('#FFF500')]);
 
 
 
