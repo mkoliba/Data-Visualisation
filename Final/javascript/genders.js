@@ -40,12 +40,17 @@ function drawline(Day) {
 	var womendaydata = gdata.filter(function(d){return d.Day == Day && d.gender == 2;});
 	var unknowndaydata = gdata.filter(function(d){return d.Day == Day && d.gender == 0;});	
 
-	//var alldaydata = gdata.filter(function(d){return d.Day == Day});
+	var alldaydata = gdata.filter(function(d){return d.Day == Day});
 
 	x.domain([0,15]);
-	y.domain([0,2000]);
 	
-	gendersvg.selectAll('.line')
+	var max_value1 = d3.max(alldaydata, function(d) {
+	        return +d.tripduration;
+	});
+	console.log(max_value1);
+	y.domain([0, max_value1]);
+	
+	gendersvg.selectAll('path')
 	        .remove();
 	
 	gendersvg.append("path")
@@ -75,14 +80,31 @@ function drawline(Day) {
       		.attr("fill","none")
       		.attr('transform', 'translate(' + margin.left + ',0)');
       		
+      	gendersvg.selectAll('g')
+      	.remove();
+      		
       	gendersvg.append("g")
 		.attr("transform", "translate(" + margin.left + "," + height + ")")
-		.call(d3.axisBottom(x));
+		.call(d3.axisBottom(x))
+		.append("text")
+		.attr("fill", "#000")
+		.attr("y", 6)
+		.attr("dy", "0.71em")
+		.attr("text-anchor", "end")
+		.text("Age Range");;
 	
 	gendersvg.append("g")
 		.attr("class","axis")
 		.attr("transform", "translate(" + margin.left + ",0)")
-		.call(d3.axisLeft(y));
+		.call(d3.axisLeft(y))
+		.append("text")
+		.attr("fill", "#000")
+		.attr("transform", "rotate(-90)")
+		.attr("y", 6)
+		.attr("dy", "0.71em")
+		.attr("text-anchor", "end")
+		.text("Average trip duration");
+
 
 }
 
