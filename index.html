@@ -20,7 +20,12 @@
     <script type="text/javascript" src="javascript/lib/d3.js"></script>
     <script src="https://d3js.org/d3-array.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo.v1.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script> 
+      $(function(){
+        $("#includedContent").load("menu.html"); 
+      });
+      </script> 
   </head>
 
 
@@ -34,27 +39,27 @@
 
     <div class="nav-bar">
       <div class="container">
-        <ul class="nav">
-          <!--
-          <li><a href="#">Nav item 1</a></li>
-          <li><a href="#">Nav item 2</a></li>
-          <li><a href="#">Nav item 3</a></li>
-          -->
-
-        </ul>
+        <div id="includedContent"></div>
       </div>
     </div>
     <div class="content">
       <div class="container">
         <div class="main">
           <!--Part 1 -->
-          <h2>Part 1:  Telling Data Stories</h2>
-          
+          <h2>Part 1:  </h2>
+          <p></p>
+          <div  id='color-legent'>
+            <div class="legend_left">  100% returns - end of trip</div>
+            <div class="legend_right"> 100% rents - start of trip</div>
+          </div>
           <svg id="nyc_map"></svg>
           <svg id="nyc_timeline"></svg>
 
-          <button type="button" id="start_animation">start</button>
+          <button type="button" id="start_animation">Start Animation</button>
+          
           <script type="text/javascript" src="javascript/nyc_map.js"></script>
+          
+          
           <!--
 
            <script type="text/javascript" src="javascript/nyc-map.js"></script>

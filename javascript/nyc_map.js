@@ -1,4 +1,4 @@
-var mapwidth = 900,
+var mapwidth = 800,
     mapheight = 600;
     
 var projection;
@@ -16,13 +16,13 @@ var path;
 d3.json("data/NYC_MapInfo.geojson", function(error, NYC_MapInfo) {
 	//.log(projection.scale());
 	
-	projection.center([40.774986, -73.946488]).angle([-55]).fitExtent([[-200, 0],[mapwidth+200, mapheight+500]], NYC_MapInfo);
+	projection.center([40.774986, -73.946488]).angle([-55]).fitExtent([[-300, 0],[mapwidth+500, mapheight+600]], NYC_MapInfo);
 	
-	//console.log(projection.translate());
+	
 
 	//projection.scale(89382.38598763589);
 
-	//console.log(projection.scale());
+	
 
     path = d3.geoPath().projection(projection);
     
@@ -33,13 +33,14 @@ d3.json("data/NYC_MapInfo.geojson", function(error, NYC_MapInfo) {
 		.append("path")
     		.attr("d", path)
 		.style("fill", function(d) {
-			var BoroName = d.properties.BoroName;
-			if (BoroName == "Staten Island") return "#ffdead";
-			else if (BoroName == "Queens") return "#53868b";
-			else if (BoroName == "Brooklyn") return "#2F4F4F";
-			else if (BoroName == "Manhattan") return "#006400";
-			else if (BoroName == "Bronx") return "#6c7b8b";
-			else return "#CCC";
+			// var BoroName = d.properties.BoroName;
+			// if (BoroName == "Staten Island") return "#ffdead";
+			// else if (BoroName == "Queens") return "#53868b";
+			// else if (BoroName == "Brooklyn") return "#2F4F4F";
+			// else if (BoroName == "Manhattan") return "#006400";
+			// else if (BoroName == "Bronx") return "#ccc";
+			// else 
+				return "#6c7b8b";
         })
         .attr("class", function(d) {
 			var BoroName = d.properties.BoroName;
@@ -50,10 +51,10 @@ d3.json("data/NYC_MapInfo.geojson", function(error, NYC_MapInfo) {
 			else if (BoroName == "Bronx") return "Bronx";
 			else return "other";
 		})
-		.style("fill-opacity","0.7")
-		.on("mouseover",function(d) {
-			d3.select(this).style("fill-opacity","1");
-		})
+		.style("fill-opacity","1")
+		// .on("mouseover",function(d) {
+		// 	d3.select(this).style("fill-opacity","1");
+		// })
 		// .on("mouseout",function(d) {
 		// 	d3.selectAll("path").style("fill-opacity","0.7");
 		// });
@@ -80,7 +81,7 @@ var zoom_handler = d3.zoom()
 function zoom_actions(){
 	
 	zoom_group.attr("transform", d3.event.transform);
-	//console.log(projection.scale())
+	
 }
 
 zoom_handler(mapsvg);
@@ -114,9 +115,9 @@ function relative_difference(out_r, in_r){
 	if (out_r == 0 && in_r == 0){
 		return 0
 	}
-	//console.log((out_r - in_r)/(d3.max([out_r, in_r])));
+	
 	output = (out_r - in_r)/( (Math.abs(out_r) + Math.abs(in_r)) / 2);
-	//console.log(out_r, in_r, output);
+	
 	return output;
 }
 
@@ -126,31 +127,35 @@ function toPaddedHexString(num, len) {
     return "0".repeat(len - str.length) + str;
 }
 
-//console.log(relative_difference[7,8])
-//console.log(relative_difference[7,8])
 
-function color_scale(x){
-	var red, blue;
-	if (x>0){
-		blue = 255;
-		red = 255 - 255* (x/2) ;
-	}
-	else{
-		red = 255;
-		blue = 255 + 255 * (x/2) ;
-	}
-	rgb = '#' + toPaddedHexString(red,2) + '00' + toPaddedHexString(blue,2);
-	return rgb;
-}
 
-var color = d3.scaleLinear()
-    .domain([-1,1])
-    .range(["#810082", "#ffa500"])
-    .interpolate(d3.interpolateCubehelix.gamma(3));
+
+// function color_scale(x){
+// 	var red, blue;
+// 	if (x>0){
+// 		blue = 255;
+// 		red = 255 - 255* (x/2) ;
+// 	}
+// 	else{
+// 		red = 255;
+// 		blue = 255 + 255 * (x/2) ;
+// 	}
+// 	rgb = '#' + toPaddedHexString(red,2) + '00' + toPaddedHexString(blue,2);
+// 	return rgb;
+// }
+
+// var color = d3.scaleLinear()
+//     .domain([-1,1])
+//     .range(["#810082", "#ffa500"])
+//     .interpolate(d3.interpolateCubehelix.gamma(3));
+
+color = d3.scaleLinear().domain([-2,2])
+      .interpolate(d3.interpolateHcl)
+      .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
 
 function draw_points(){
 	d3.json("data/stations_rents_outin.json", function(error, rents_out_in) {
-		//console.log(rents_out_in)
+		
 		station_data =rents_out_in;
 		point_group.selectAll("circle")
 			.data(rents_out_in.stations)
@@ -166,7 +171,7 @@ function draw_points(){
 				//.attr("class", "non_brushed")
 				.style("z-index", 4)
 				.style("position", "relative")
-				.style("fill", "yellow")
+				.style("fill", "#ff57a5")
 				.style("stroke", "gray")
 				.style("stroke-width", 0.25)
 				.style("opacity", 0.75)
@@ -183,20 +188,23 @@ function draw_points(){
 
 
 function update_poits(index){
-	//console.log(station_data.values[0])
+	
 
 	out_in = station_data.values[index]
 	
 	point_group.selectAll("circle")
 		.data(out_in)
 		.style("fill", function(d){
-			//console.log(d,(d[0] - d[1])/(d3.max([d[0], d[1]])),color_scale(relative_difference(d[0],d[1])))
-			return color_scale(relative_difference(d[0],d[1]));
+			
+			var diff =relative_difference(d[0],d[1]),
+			rgb = color(diff);
+			//.log(diff, rgb)
+			return rgb;
 		} )
 		.selectAll("title")
     		.text(function(d,i){
-				//console.log(i, out_in[d.o][0])
-				return d.name + "in: " + out_in[d.o][1] + " out: " + out_in[d.o][0];
+				
+				return d.name + " In: " + out_in[d.o][1] + " Out: " + out_in[d.o][0];
 			});
 		
 }
@@ -205,9 +213,11 @@ function update_poits(index){
 
 //Time line
 
-var margin = {top: 20, right: 20, bottom: 40, left: 30};
+var margin = {top: 20, right: 20, bottom: 40, left: 50};
 
-var timeline_with = 770 - margin.left - margin.right;
+
+
+var timeline_with = 5*144 ;//770 - margin.left - margin.right;
 var timeline_height = 300 - margin.top - margin.bottom;
 
 var timeline_svg = d3.select("#nyc_timeline")
@@ -242,7 +252,7 @@ d3.json("data/rents_timeline.json", function(error, rent_bar_data) {
 		return d;
 		})]);
 
-	//console.log(timeline_data)
+	
 
 	var rects = bar_plot.append("g");
 
@@ -276,9 +286,20 @@ d3.json("data/rents_timeline.json", function(error, rent_bar_data) {
 				.tickValues(d3.range(0, timeline_data.length +1 , 6)))
 
 
-				
+	timeline_svg.append("text")
+		.attr("transform", "translate(" + (timeline_with / 2) + "," + (timeline_height + margin.top + margin.bottom) + ")")
+		.style("text-anchor", "middle")
+		.style("font-size", "15px")
+		.text("Time");	
 
-	
+		timeline_svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0)
+        .attr("x", - ((timeline_height+margin.bottom) / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .style("font-size", "15px")
+        .text("Number of rents on 1.3.2018");
 
 })
 
@@ -303,7 +324,7 @@ function brushcentered() {
 		cx = d3.mouse(this)[0],
 		x0 = cx - dx / 2,
 		x1 = cx + dx / 2;
-		//console.log(x0, x1, cx);
+		
 	d3.select(this.parentNode).call(brush.move, x1 > timeline_with ? [timeline_with - dx, timeline_with] : x0 < 0 ? [0, dx] : [x0, x1]);
   }
 function brushed() {
@@ -319,7 +340,7 @@ function brushed() {
 	update_poits(d1[0])
 	
 	//var extent = d3.event.selection.map(xScale.invert, xScale);
-	//console.log("extend", extent);
+	
 	//dot.classed("selected", function(d) { return extent[0] <= d[0] && d[0] <= extent[1]; });
 
   }
@@ -329,7 +350,7 @@ function brushed() {
 	if (!d3.event.selection) return; // Ignore empty selections.
 	var d0 = d3.event.selection.map(xScale.invert),
 		d1 = d0.map(Math.round);
-	//console.log(d1)
+	
 	// If empty when rounded, use floor & offset instead.
 	if (d1[0] >= d1[1]) {
 	  d1[0] = Math.floor(d0[0]);
@@ -347,7 +368,7 @@ function start_animation(){
 	var position = [0,1];
 
 	//d3.select("g .brush").transition().call(brush.move, position.map(xScale));
-	console.log(timeline_data.length);
+	//console.log(timeline_data.length);
 	for(var i = 0; i <= timeline_data.length ; i++){
 		d3.select("g .brush")
 			.transition()
@@ -356,7 +377,7 @@ function start_animation(){
 			.call(brush.move, position.map(xScale));
 		
 		position = [i,i+1];
-		console.log(position);
+		//console.log(position);
 	}
 
 }
@@ -364,4 +385,23 @@ function start_animation(){
 d3.select("#start_animation")
 	.on("click", function(){
         start_animation();
-      });
+	  });
+	  
+//#######################################################
+
+//Legend
+
+var legend = d3.select("#color-legent");
+var    length = 50,
+    color2 = d3.scaleLinear().domain([1,length])
+      .interpolate(d3.interpolateHcl)
+      .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
+
+
+
+  for (var i = 0; i < length; i++) {
+    legend.append('div').attr('style', function (d) {
+      return 'background-color: ' + color2(i);
+	})
+	.attr("class", "color_scale");
+  }
