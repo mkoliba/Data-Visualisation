@@ -1,0 +1,25 @@
+/* -----------------------
+Base styles
+------------------------*/
+
+	html, body, #vis {
+            height: 100%;
+            margin: 0;
+        }
+	circle {
+		fill: red;
+		stroke: #aaa;
+	}
+	#main{
+		width: 602px;
+		border: 1px solid black;
+		overflow: hidden;
+	}
+	#vis {
+		width: 600px;
+		float:left;
+	}
+	#line {
+		width: 600px;
+		float:left;
+	}
