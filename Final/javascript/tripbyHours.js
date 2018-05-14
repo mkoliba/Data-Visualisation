@@ -52,22 +52,11 @@ var y_axis = d3.axisLeft(y_scale);
 svg.append('g')
     	.attr('class', 'x axis')
     	.attr('transform', 'translate(0,' + height + ')')
-    	.append("text")
-	.attr("fill", "#000")
-	.attr("y", 6)
-	.attr("dy", "0.71em")
-	.attr("text-anchor", "end")
-	.text("Hour");
+;
 
 svg.append('g')
 	.attr('class', 'y axis')
-	.append("text")
-	.attr("fill", "#000")
-	.attr("transform", "rotate(-90)")
-	.attr("y", 6)
-	.attr("dy", "0.71em")
-	.attr("text-anchor", "end")
-	.text("Trip count");
+	;
 
 function draw(Day) {
     if (Day < 10) Day = "0" + Day;
@@ -132,14 +121,15 @@ function draw(Day) {
     svg.select('.y.axis')
         .transition(t)
         .call(y_axis);
-// text label for the y axis
-svg.append("text")
-.attr("transform", "rotate(-90)")
-.attr("y", 0 - margin.left)
-.attr("x",0 - (height / 2))
-.attr("dy", "1em")
-.style("text-anchor", "middle")
-.text("Number of trips");      
+
+  // text label for the y axis
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Number of trips");        
 
 }
 

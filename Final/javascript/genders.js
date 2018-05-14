@@ -82,15 +82,18 @@ function drawline(Day) {
       		
       	gendersvg.selectAll('g')
       	.remove();
-      		
+      			  var ticks = ["88","83","78","73","68","63","58","53","48","43"
+      			,"38","33","28 ","23","18"," 14"];
+      	
       	gendersvg.append("g")
 		.attr("transform", "translate(" + margin.left + "," + height + ")")
-		.call(d3.axisBottom(x))
-		.append("text")
+		.call(d3.axisBottom(x).ticks(15).tickFormat(function(d){return ticks[d];}))		.append("text")
 		.attr("fill", "#000")
-		.attr("y", 6)
+		.attr("y", -15)
 		.attr("dy", "0.71em")
-		.attr("text-anchor", "end")
+		.attr("font-size", "12px")
+		.attr("x",450)
+		.attr("text-anchor", "start")
 		.text("Age Range");;
 	
 	gendersvg.append("g")
@@ -101,6 +104,7 @@ function drawline(Day) {
 		.attr("fill", "#000")
 		.attr("transform", "rotate(-90)")
 		.attr("y", 6)
+		.attr("font-size", "12px")
 		.attr("dy", "0.71em")
 		.attr("text-anchor", "end")
 		.text("Average trip duration");
