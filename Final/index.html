@@ -4,30 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <script src="javascript/lib/d3.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+   
     <style src="javascript/style.css">
     </style>
 </head>
 <body>
-    <div id = "main">
-    <div id = "vis">
-    <form>
-		<label for="Day">  <h3><span style="text-decoration: underline; color: #339966;"><strong>Select the day of this month (March-2018)</strong></span></h3>
-		</label>
-		<input type="range" min="1" max="31" step="1" id="day" value="1" oninput="selected_day.value = day.value">
-		<output name="selected_day" id="selected_day">1</output>
-    </form>
-    </div>
-    <div id = "line">
-    <form>
-		<label for="Day"> <h3><span style="text-decoration: underline; color: #339966;"><strong>Select the day of this month (March-2018)</strong></span></h3>
-		</label>
-		<input type="range" min="1" max="31" step="1" id="gender" value="1" oninput="selected_gender.value = gender.value">
-		<output name="selected_gender" id="selected_gender">1</output>
-    </form>
-    </div>
+    <div id="main">
+      <div id="vis">
+        <form>
+          <label for="Day">
+            <h3>
+              <span style="text-decoration: underline; color: #339966;">
+                <strong>Select the day of this month (March-2018)</strong>
+              </span>
+            </h3>
+          </label>
+          <input type="range" min="1" max="31" step="1" id="day" value="1" oninput="selected_day.value = day.value">
+          <output name="selected_day" id="selected_day">1</output>
+        </form>
+      </div>
+      <div id="line">
+        <form>
+          <label for="Day">
+            <h3>
+              <span style="text-decoration: underline; color: #339966;">
+                <strong>Select the day of this month (March-2018)</strong>
+              </span>
+            </h3>
+          </label>
+          <input type="range" min="1" max="31" step="1" id="gender" value="1" oninput="selected_gender.value = gender.value">
+          <output name="selected_gender" id="selected_gender">1</output>
+        </form>
+      </div>
+      <div id="legend_graph">
+        <h4>Legend</h4>
+        <ul>
+          <li><span style="color: red">Red -</span>  Female</li>
+          <li><span style="color: blue">Blue -</span>Male</li>
+          <li><span style="color: green">Green -</span> Unknown gender</li>
+        </ul>
+      </div>
     </div>
     <script src="javascript/tripbyHours.js"></script>
-     <script src="javascript/genders.js"></script>
+    <script src="javascript/genders.js"></script>
 </body>
 </html>
