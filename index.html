@@ -72,6 +72,47 @@
           <script type="text/javascript" src="javascript/nyc_map.js"></script>
           
           
+          <div id="vis">
+              <form>
+                <label for="Day">
+                  <h3>
+                    <span style="text-decoration: underline; color: #339966;">
+                      <strong>Select the day of this month (March-2018)</strong>
+                    </span>
+                  </h3>
+                </label>
+                <input type="range" min="1" max="31" step="1" id="day" value="1" oninput="selected_day.value = day.value">
+                <output name="selected_day" id="selected_day">1</output>
+              </form>
+            </div>
+            <div class="block-100" >
+            <div id="line">
+              <form>
+                <label for="Day">
+                  <h3>
+                    <span style="text-decoration: underline; color: #339966;">
+                      <strong>Select the day of this month (March-2018)</strong>
+                    </span>
+                  </h3>
+                </label>
+                <input type="range" min="1" max="31" step="1" id="gender" value="1" oninput="selected_gender.value = gender.value">
+                <output name="selected_gender" id="selected_gender">1</output>
+              </form>
+            </div>
+            <div id="legend_graph">
+                <h4>Legend</h4>
+                <ul>
+                  <li><span style="color: red">Red -</span>  Female</li>
+                  <li><span style="color: blue">Blue -</span> Male</li>
+                  <li><span style="color: green">Green -</span> Unknown gender</li>
+                </ul>
+              </div>
+            </div>
+            <script src="Final/javascript/tripbyHours.js"></script>
+            <script src="Final/javascript/genders.js"></script>
+            
+           
+            <div class="block-100">
           <h3>Data: </h3>
           <ul>
             <li>
@@ -91,7 +132,7 @@
                 <a href="https://github.com/mkoliba/Data-Visualisation">Original Repository</a>
             </li>
           </ul>
-
+        </div>
         </div>
       </div>
     </div>
