@@ -82,8 +82,9 @@ function drawline(Day) {
       		
       	gendersvg.selectAll('g')
       	.remove();
-      	var ticks = ["1930","1935","1940","1945","1950","1955","1960","1965","1970","1975"
-      			,"1980","1985","1990","1995","2000","2004"];
+      			  var ticks = ["88","83","78","73","68","63","58","53","48","43"
+      			,"38","33","28 ","23","18"," 14"];
+      	
       	gendersvg.append("g")
 		.attr("transform", "translate(" + margin.left + "," + height + ")")
 		.call(d3.axisBottom(x).ticks(15).tickFormat(function(d){return ticks[d];}))		.append("text")
