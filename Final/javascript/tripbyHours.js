@@ -46,15 +46,28 @@ var y_scale = d3.scaleLinear()
 var colour_scale = d3.scaleQuantile()
     .range(["#00ea00", "#00e100","#00da00", "#00d100", "#00aa00", "#00a100", "#009a00","#009100", "#008a00", "#008100", "#007a00", "#007100", "#006a00", "#006100"]);
 
-var y_axis = d3.axisLeft(y_scale);
 var x_axis = d3.axisBottom(x_scale);
+var y_axis = d3.axisLeft(y_scale);
 
 svg.append('g')
-    .attr('class', 'x axis')
-    .attr('transform', 'translate(0,' + height + ')');
+    	.attr('class', 'x axis')
+    	.attr('transform', 'translate(0,' + height + ')')
+    	.append("text")
+	.attr("fill", "#000")
+	.attr("y", 6)
+	.attr("dy", "0.71em")
+	.attr("text-anchor", "end")
+	.text("Hour");
 
 svg.append('g')
-    .attr('class', 'y axis');
+	.attr('class', 'y axis')
+	.append("text")
+	.attr("fill", "#000")
+	.attr("transform", "rotate(-90)")
+	.attr("y", 6)
+	.attr("dy", "0.71em")
+	.attr("text-anchor", "end")
+	.text("Trip count");
 
 function draw(Day) {
     if (Day < 10) Day = "0" + Day;
